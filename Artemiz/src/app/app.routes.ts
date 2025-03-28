@@ -4,7 +4,7 @@ import { RegistroComponent } from './registro/registro.component';
 
 export const routes: Routes = [
     {
-        path: 'login',
+        path: '',
         title: 'login',
         component: LoginComponent
     },
