@@ -3,7 +3,6 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f3f2f2;
-    height: 100vh;
 }
 /* Estilos del encabezado */
 header {
@@ -66,25 +65,14 @@ nav ul li a {
     border-radius: 50%;
 }
 
-/* Campos de entrada */
-.email, .password {
-    margin-bottom: 20px;
-    text-align: left;
-    color: #6e6969;
-}
-
-.email label, .password label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-.email input, .password input {
+.name input, .LastName input, .email input, .password input, .password-2 input{
     width: 100%;
     padding: 12px;
+    margin: 8px;
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 14px;
-    box-sizing: border-box;
+    box-sizing: border-box; 
 }
 
 /* Botón de inicio de sesión */
