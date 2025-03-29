@@ -14,34 +14,33 @@
             </ul>
         </nav>
     </header>
-    <form action="">
+    <form (ngSubmit)="register()">
       <div class="container">
-          <h1 class="h1">Registrate aqui!</h1>
-          <div class="logo">
-              <img src="" alt="">
-          </div>
-    
+          <h1 class="h1">Registrate</h1>
+          
           <div class="name">
-              <input type="text" id="name" placeholder="Nombre">
+              <input type="text" id="name" placeholder="Nombre" [(ngModel)]="name" name="name" required="">
           </div>
     
           <div class="LastName">
-              <input type="text" id="LastName" placeholder="Apellido">
+              <input type="text" id="LastName" placeholder="Apellido" [(ngModel)]="lastName" name="lastName" required="">
           </div>
     
           <div class="email">
-              <input type="email" id="email" placeholder="Correo electronico">
+              <input type="email" id="email" placeholder="Correo electronico" [(ngModel)]="email" name="email" required="">
           </div>
     
           <div class="password">
-              <input type="password" id="password" placeholder="Contraseña">
+              <input type="password" id="password" placeholder="Contraseña" [(ngModel)]="password" name="password" required="">
           </div>
     
           <div class="password-2">
-              <input type="password" id="password-2" placeholder="Confirmar Contraseña">
+              <input type="password" id="password-2" placeholder="Confirmar Contraseña" [(ngModel)]="confirmPassword" name="confirmPassword" required="">
           </div>
-    
-          <button  class="button">Registrate</button>
+
+          <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+          <button  class="button" type="submit">Registrate</button>
     
           <p class="login-link">Ya tienes cuenta, <a href="">¡Ingresa aqui!</a></p>
       </div>
