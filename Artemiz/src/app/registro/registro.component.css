@@ -102,7 +102,7 @@ nav ul li a {
 }
 
 .login-link a {
-    color: #00ff22;
+    color: #0044ff;
     text-decoration: none;
     font-weight: 600;
 }
@@ -111,4 +111,10 @@ nav ul li a {
     color: #0056b3;
     text-decoration: underline;
     cursor: pointer;
+}
+.error-message {
+    color: red;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 10px;
 }

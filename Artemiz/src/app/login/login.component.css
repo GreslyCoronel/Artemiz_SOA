@@ -104,6 +104,23 @@ nav ul li a {
 .button:hover {
     background-color: #b64aaf;
 }
+.google-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #db4437;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.google-button:hover {
+    background-color: #c1351d;
+}
+
 
 /* Enlace de registro */
 .login-link {
@@ -114,7 +131,7 @@ nav ul li a {
 }
 
 .login-link a {
-    color: #00ff22;
+    color: #0044ff;
     text-decoration: none;
     font-weight: 600;
 }
@@ -124,3 +141,10 @@ nav ul li a {
     text-decoration: underline;
     cursor: pointer;
 }
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+  }
+  
