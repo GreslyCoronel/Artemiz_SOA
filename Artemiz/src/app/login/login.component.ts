@@ -48,11 +48,27 @@ export class LoginComponent {
       .then(user => {
         console.log("Inicio de sesión con Google exitoso:", user);
         alert("Inicio de sesión con Google exitoso!");
-      })
+      }
+    )
       .catch(error => {
         console.error("Error en Google login:", error);
         this.errorMessage = "⚠️ Error al iniciar sesión con Google";
-      });
+      }
+    );
+  }
+
+  loginWithGitHub(){
+    this.authService.loginWithGitHub()
+      .then(user => {
+        console.log("Inicio de sesión con GitHub exitoso:", user);
+        alert("Inicio de sesión con GitHub exitoso!");
+      }
+    )
+      .catch(error => {
+        console.error("Error en GitHub login:", error);
+        this.errorMessage = "⚠️ Error al iniciar sesión con GitHub";
+      }
+    );
   }
 
   validateEmail(email: string): boolean {
