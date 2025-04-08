@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-git',
@@ -6,6 +6,11 @@ import { Component } from '@angular/core';
   templateUrl: './git.component.html',
   styleUrl: './git.component.css'
 })
-export class GitComponent {
 
+export class GitComponent {
+  @Output() githubLogin = new EventEmitter<void>();
+
+  emitirLogin() {
+    this.githubLogin.emit();
+  }
 }

@@ -2,11 +2,12 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { GitComponent } from '../git/git.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, GitComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -57,19 +58,23 @@ export class LoginComponent {
     );
   }
 
-  loginWithGitHub(){
+  loginWithGitHub() {
     this.authService.loginWithGitHub()
       .then(user => {
-        console.log("Inicio de sesión con GitHub exitoso:", user);
+        console.log("✅ Inicio de sesión con GitHub exitoso:", user);
         alert("Inicio de sesión con GitHub exitoso!");
-      }
-    )
+      })
       .catch(error => {
-        console.error("Error en GitHub login:", error);
-        this.errorMessage = "⚠️ Error al iniciar sesión con GitHub";
-      }
-    );
+        if (error.code === 'auth/account-exists-with-different-credential') {
+          alert('⚠️ Cuenta ya existe con otro proveedor.');
+          this.errorMessage = "⚠️ Ya existe una cuenta con este correo usando otro método de inicio de sesión.";
+        } else {
+          console.error("❌ Error en GitHub login:", error);
+          this.errorMessage = "⚠️ Error al iniciar sesión con GitHub";
+        }
+      });
   }
+  
 
   validateEmail(email: string): boolean {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
