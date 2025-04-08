@@ -1,5 +1,12 @@
 import { Injectable, inject } from '@angular/core';
-import { Auth, signInWithEmailAndPassword,createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from '@angular/fire/auth';
+import { 
+  Auth, 
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword, 
+  signInWithPopup, 
+  GoogleAuthProvider,
+  GithubAuthProvider
+ } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +37,12 @@ export class AuthService {
   loginWithGoogle() {
     const provider = new GoogleAuthProvider();
     return signInWithPopup(this.auth, provider);
+  }
+
+  //Login con Git Hub
+  loginWithGitHub(){
+    const provider = new GithubAuthProvider();
+    return signInWithPopup(this.auth, provider )
   }
 
   logout() {

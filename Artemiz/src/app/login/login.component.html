@@ -33,6 +33,8 @@
       
           <button type="submit" class="button">Iniciar sesión</button>
           <button type="button" class="google-button" (click)="loginWithGoogle()">Iniciar sesión con Google</button>
+
+          <app-git (githubLogin)="loginWithGitHub()"></app-git>
       
           <p class="login-link">No tienes cuenta? <a href="/registro">¡Regístrate aquí!</a></p>
         </div>
