@@ -3,11 +3,11 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { GitComponent } from '../git/git.component';
-
+import { FacebookComponent } from '../facebook/facebook.component';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, CommonModule, GitComponent],
+  imports: [FormsModule, CommonModule, GitComponent, FacebookComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -48,14 +48,16 @@ export class LoginComponent {
     this.authService.loginWithGoogle()
       .then(user => {
         console.log("Inicio de sesión con Google exitoso:", user);
+        this.errorMessage = ""; // ✅ Limpia el mensaje de error aquí
         alert("Inicio de sesión con Google exitoso!");
       }
     )
       .catch(error => {
         console.error("Error en Google login:", error);
-        this.errorMessage = "⚠️ Error al iniciar sesión con Google";
-      }
-    );
+
+        this.errorMessage = `⚠️ Error al iniciar sesión con Google: ${error.message}`;
+      });
+
   }
 
   loginWithGitHub() {
@@ -72,6 +74,19 @@ export class LoginComponent {
           console.error("❌ Error en GitHub login:", error);
           this.errorMessage = "⚠️ Error al iniciar sesión con GitHub";
         }
+
+      });
+  }
+
+  loginFacebook() {
+    this.authService.loginWithFacebook()
+      .then(result => {
+        console.log('Autenticado con Facebook:', result.user);
+        
+      })
+      .catch(error => {
+        console.error('Error con Facebook Login:', error);
+
       });
   }
   
