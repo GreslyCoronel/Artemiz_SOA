@@ -7,7 +7,7 @@ import { FacebookComponent } from '../facebook/facebook.component';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, CommonModule, GitComponent/*, FacebookComponent*/],
+  imports: [FormsModule, CommonModule, GitComponent, FacebookComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -48,14 +48,13 @@ export class LoginComponent {
     this.authService.loginWithGoogle()
       .then(user => {
         console.log("Inicio de sesión con Google exitoso:", user);
+        this.errorMessage = ""; // ✅ Limpia el mensaje de error aquí
         alert("Inicio de sesión con Google exitoso!");
-      }
-    )
+      })
       .catch(error => {
         console.error("Error en Google login:", error);
-        this.errorMessage = "⚠️ Error al iniciar sesión con Google";
-      }
-    );
+        this.errorMessage = `⚠️ Error al iniciar sesión con Google: ${error.message}`;
+      });
   }
 
   loginWithGitHub() {
