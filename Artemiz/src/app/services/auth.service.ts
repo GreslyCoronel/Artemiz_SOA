@@ -7,6 +7,7 @@ import {
   GoogleAuthProvider,
   GithubAuthProvider,
   FacebookAuthProvider
+
  } from '@angular/fire/auth';
 
 @Injectable({
@@ -45,11 +46,13 @@ export class AuthService {
     const provider = new GithubAuthProvider();
     return signInWithPopup(this.auth, provider )
   }
+
   //Login con Facebook
   loginWithFacebook() {
     const provider = new FacebookAuthProvider();
     return signInWithPopup(this.auth, provider);
   }
+
 
   logout() {
     return this.auth.signOut();

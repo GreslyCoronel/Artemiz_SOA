@@ -50,11 +50,14 @@ export class LoginComponent {
         console.log("Inicio de sesión con Google exitoso:", user);
         this.errorMessage = ""; // ✅ Limpia el mensaje de error aquí
         alert("Inicio de sesión con Google exitoso!");
-      })
+      }
+    )
       .catch(error => {
         console.error("Error en Google login:", error);
+
         this.errorMessage = `⚠️ Error al iniciar sesión con Google: ${error.message}`;
       });
+
   }
 
   loginWithGitHub() {
@@ -71,6 +74,7 @@ export class LoginComponent {
           console.error("❌ Error en GitHub login:", error);
           this.errorMessage = "⚠️ Error al iniciar sesión con GitHub";
         }
+
       });
   }
 
@@ -82,6 +86,7 @@ export class LoginComponent {
       })
       .catch(error => {
         console.error('Error con Facebook Login:', error);
+
       });
   }
   
