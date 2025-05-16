@@ -8,6 +8,8 @@ import {
   GithubAuthProvider
  } from '@angular/fire/auth';
 
+import { sendPasswordResetEmail } from 'firebase/auth';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -44,6 +46,17 @@ export class AuthService {
     const provider = new GithubAuthProvider();
     return signInWithPopup(this.auth, provider )
   }
+
+// Enviar correo para restablecer contraseña
+async resetPassword(email: string): Promise<void> {
+  try {
+    await sendPasswordResetEmail(this.auth, email);
+    console.log('Correo de restablecimiento enviado.');
+  } catch (error) {
+    console.error('Error al enviar el correo de restablecimiento:', error);
+    throw error;
+  }
+}
 
   logout() {
     return this.auth.signOut();

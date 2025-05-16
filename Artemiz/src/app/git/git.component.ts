@@ -3,6 +3,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'app-git',
   imports: [],
+  standalone: true,
   templateUrl: './git.component.html',
   styleUrl: './git.component.css'
 })

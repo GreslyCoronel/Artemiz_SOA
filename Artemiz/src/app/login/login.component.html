@@ -1,43 +1,34 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artemiz</title>
-</head>
-<body>
-    <header>
-        <nav>
-            <div class="logo">Artemiz</div>
-            <ul>
-                <li><a href="/login">Inicio</a></li>
-            </ul>
-        </nav>
-    </header>
-    <form (ngSubmit)="login()">
-        <div class="container">
-          <h1 class="h1">Login</h1>
-      
-          <div class="email">
-            <label for="email">Correo electrónico</label>
-            <input type="email" id="email" [(ngModel)]="email" name="email" required />
-          </div>
-      
-          <div class="password">
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" [(ngModel)]="password" name="password" required />
-          </div>
-      
-        
-          <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
-      
-          <button type="submit" class="button">Iniciar sesión</button>
-          <button type="button" class="google-button" (click)="loginWithGoogle()">Iniciar sesión con Google</button>
+<header>
+  <nav>
+    <div class="logo">Artemiz</div>
+    <ul>
+      <li><a routerLink="/login">Inicio</a></li>
+    </ul>
+  </nav>
+</header>
 
-          <app-git (githubLogin)="loginWithGitHub()"></app-git>
-      
-          <p class="login-link">No tienes cuenta? <a href="/registro">¡Regístrate aquí!</a></p>
-        </div>
-      </form>
-</body>
-</html>
+<form (ngSubmit)="login()">
+  <div class="container">
+    <h1 class="h1">Login</h1>
+
+    <div class="email">
+      <label for="email">Correo electrónico</label>
+      <input type="email" id="email" [(ngModel)]="email" name="email" required />
+    </div>
+
+    <div class="password">
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" [(ngModel)]="password" name="password" required />
+    </div>
+
+    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+    <button type="submit" class="button">Iniciar sesión</button>
+    <button type="button" class="google-button" (click)="loginWithGoogle()">Iniciar sesión con Google</button>
+
+    <app-git (githubLogin)="loginWithGitHub()"></app-git>
+
+    <p class="login-link">No tienes cuenta? <a routerLink="/registro">¡Regístrate aquí!</a></p>
+    <p><a class="password-link" href="/cambiarPassword">¿Olvidaste tu contraseña?</a></p>
+  </div>
+</form>
