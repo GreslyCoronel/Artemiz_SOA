@@ -28,18 +28,10 @@
     <button type="button" class="google-button" (click)="loginWithGoogle()">Iniciar sesión con Google</button>
 
     <app-git (githubLogin)="loginWithGitHub()"></app-git>
+    <app-facebook></app-facebook>
 
     <p class="login-link">No tienes cuenta? <a routerLink="/registro">¡Regístrate aquí!</a></p>
     <p><a class="password-link" href="/cambiarPassword">¿Olvidaste tu contraseña?</a></p>
   </div>
 </form>
-          <app-git (githubLogin)="loginWithGitHub()"></app-git>
 
-          <app-facebook></app-facebook>
-
-      
-          <p class="login-link">No tienes cuenta? <a href="/registro">¡Regístrate aquí!</a></p>
-        </div>
-      </form>
-</body>
-</html>
