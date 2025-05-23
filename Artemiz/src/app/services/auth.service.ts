@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, sendPasswordResetEmail } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, sendPasswordResetEmail, FacebookAuthProvider } from '@angular/fire/auth';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -42,6 +42,12 @@ export class AuthService {
   // Login con GitHub
   loginWithGitHub() {
     const provider = new GithubAuthProvider();
+    return signInWithPopup(this.auth, provider);
+  }
+
+  //Login con Facebook
+  loginWithFacebook() {
+    const provider = new FacebookAuthProvider();
     return signInWithPopup(this.auth, provider);
   }
 
