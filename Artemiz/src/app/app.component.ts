@@ -5,6 +5,8 @@ import { RegisterComponent } from './registro/registro.component';
 import { GitComponent } from './git/git.component';
 import { TuPerfilComponent } from './tu-perfil/tu-perfil.component';
 import { CambiarPasswordComponent } from './cambiar-password/cambiar-password.component';
+import { HomeComponent } from './home/home.component';
+
 
 @Component({
   selector: 'app-root',
@@ -14,11 +16,14 @@ import { CambiarPasswordComponent } from './cambiar-password/cambiar-password.co
      RegisterComponent,
      GitComponent,
      TuPerfilComponent,
-     CambiarPasswordComponent
+     CambiarPasswordComponent,
+     HomeComponent
     ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
+
+
 export class AppComponent {
   title = 'artemiz';
 }

@@ -1,24 +1,21 @@
 import { Injectable, inject } from '@angular/core';
-import { 
-  Auth, 
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword, 
-  signInWithPopup, 
-  GoogleAuthProvider,
-  GithubAuthProvider
- } from '@angular/fire/auth';
-
-import { sendPasswordResetEmail } from 'firebase/auth';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, sendPasswordResetEmail } from '@angular/fire/auth';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { onAuthStateChanged } from 'firebase/auth';
+import { User } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private auth = inject(Auth); // Inyección de Firebase Auth
-  
+  private auth = inject(Auth);
+  private http = inject(HttpClient);
+  private apiUrl = 'http://localhost:3000/api/usuarios';
 
-   // Registrar usuario con Firebase Authentication
-   async register(email: string, password: string) {
+  // Registro con email y contraseña
+  async register(email: string, password: string) {
     try {
       const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
       return userCredential.user;
@@ -27,7 +24,8 @@ export class AuthService {
       throw error;
     }
   }
-  // Iniciar sesión 
+
+  // Inicio de sesión
   async login(email: string, password: string) {
     if (!email || !password) {
       throw new Error("Correo y contraseña son obligatorios");
@@ -35,30 +33,70 @@ export class AuthService {
     return signInWithEmailAndPassword(this.auth, email, password);
   }
 
- //logeo con la cuenta de google
+  // Login con Google
   loginWithGoogle() {
     const provider = new GoogleAuthProvider();
     return signInWithPopup(this.auth, provider);
   }
 
-  //Login con Git Hub
-  loginWithGitHub(){
+  // Login con GitHub
+  loginWithGitHub() {
     const provider = new GithubAuthProvider();
-    return signInWithPopup(this.auth, provider )
+    return signInWithPopup(this.auth, provider);
   }
 
-// Enviar correo para restablecer contraseña
-async resetPassword(email: string): Promise<void> {
-  try {
-    await sendPasswordResetEmail(this.auth, email);
-    console.log('Correo de restablecimiento enviado.');
-  } catch (error) {
-    console.error('Error al enviar el correo de restablecimiento:', error);
-    throw error;
+  // Restablecer contraseña
+  async resetPassword(email: string): Promise<void> {
+    try {
+      await sendPasswordResetEmail(this.auth, email);
+      console.log('Correo de restablecimiento enviado.');
+    } catch (error) {
+      console.error('Error al enviar el correo de restablecimiento:', error);
+      throw error;
+    }
   }
-}
 
+  // Cerrar sesión
   logout() {
     return this.auth.signOut();
   }
+
+  // ✅ Obtener usuario autenticado como observable
+  getCurrentUser(): Observable<User | null> {
+    return new Observable(observer => {
+      onAuthStateChanged(this.auth, user => {
+        observer.next(user);
+      });
+    });
+  }
+
+  // ✅ Verificar si el usuario está logueado (sin usar localStorage)
+  isLoggedIn(): Observable<boolean> {
+    return new Observable(observer => {
+      onAuthStateChanged(this.auth, user => {
+        observer.next(!!user);
+      });
+    });
+  }
+
+getUserDataFromBackend(): Observable<any> {
+  return new Observable(observer => {
+    onAuthStateChanged(this.auth, (user) => {
+      if (user) {
+        this.http.get(`${this.apiUrl}/${user.uid}`).subscribe({
+          next: (data) => observer.next(data),
+          error: (err) => {
+            console.error('Error en la petición:', err);
+            observer.next(null); // Maneja el error sin romper el flujo
+          }
+        });
+      } else {
+        observer.next(null);
+      }
+    });
+  });
 }
+
+}
+
+ 

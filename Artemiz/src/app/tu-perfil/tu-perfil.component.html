@@ -1,1 +1,58 @@
-<h1>Bienvenido a tu perfil</h1>
+<body>
+  
+
+<div class="container">
+  <section class="principal-info">
+    <img class="img-usuario" [src]="userData?.imgPerf" alt="imagen de usuario">
+    <div class="perfil-cont">
+      <label><h5>{{userData?.nickName}}</h5></label>
+      <label class="letra-pequeña-azul">{{userData?.email}}</label>
+    </div>
+     <a href=""><button type="button" class="editar-button" >Editar perfil</button></a>
+     <a href=""><button type="button" class="eliminar-button">Eliminar perfil</button></a>
+  </section>
+
+  <label class="h3"><h3>Datos personales</h3></label>
+  <section class="secundary-info">
+    <div class="identificacion">
+      <div class="campo">
+        <i class="fa-solid fa-user" style="padding-top: 5px;"></i>
+        <div class="info-container">
+          <label for="" class="legend">Nombre</label>
+          <label>{{userData?.nombre ?? "No registrado"}} </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="campo">
+      <i class="fa-solid fa-user" style="padding-top: 5px;"></i>
+      <div class="info-container">
+        <label for="" class="legend">Apellido</label>
+       <label>{{userData?.apellido ?? "No registrado"}} </label>
+      </div>               
+    </div>
+    <div class="campo">
+      <i class="fa-solid fa-user" style="padding-top: 5px;"></i>
+      <div class="info-container">
+        <label for="" class="legend">Direccion</label>
+       <label>{{userData?.direccion ?? "No registrado"}} </label>
+      </div>               
+    </div>
+    <div class="campo">
+      <i class="fa-solid fa-user" style="padding-top: 5px;"></i>
+      <div class="info-container">
+        <label for="" class="legend">Telefono</label>
+       <label>{{userData?.telefono ?? "No registrado"}} </label>
+      </div>               
+    </div>
+    <div class="campo">
+      <i class="fa-solid fa-user" style="padding-top: 5px;"></i>
+      <div class="info-container">
+        <label for="" class="legend">Email</label>
+       <label>{{userData?.correo ?? "No registrado"}} </label>
+      </div>               
+    </div>
+
+  </section>
+</div>
+</body>

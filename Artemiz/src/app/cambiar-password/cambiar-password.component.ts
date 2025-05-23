@@ -3,6 +3,8 @@ import { FormBuilder, Validators, FormGroup, ReactiveFormsModule } from '@angula
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
+
+
 @Component({
   selector: 'app-cambiar-password',
   templateUrl: './cambiar-password.component.html',
