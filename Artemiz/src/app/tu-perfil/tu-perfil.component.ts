@@ -85,6 +85,32 @@ export class TuPerfilComponent implements OnInit {
       }
     );
   }
+eliminarPerfil() {
+    if (!this.userData?.firebaseUID) {
+      this.mensaje = 'No se puede eliminar: datos de usuario faltantes';
+      this.mensajeTipo = 'error';
+      return;
+    }
+
+    if (!confirm('¿Estás seguro de eliminar tu perfil? Esta acción es irreversible.')) {
+      return; // El usuario canceló
+    }
+
+    this.http.delete(`http://localhost:3000/api/usuarios/${this.userData.firebaseUID}`)
+      .subscribe({
+        next: () => {
+          alert('Perfil eliminado correctamente');
+          // Aquí también podrías cerrar sesión si quieres
+          this.authService.logout();  // si tienes método logout
+          this.router.navigate(['/login']);  // redirigir al login
+        },
+        error: (err) => {
+          console.error('Error al eliminar perfil:', err);
+          this.mensaje = 'Error al eliminar el perfil. Inténtalo más tarde.';
+          this.mensajeTipo = 'error';
+        }
+      });
+  }
 
  
 
