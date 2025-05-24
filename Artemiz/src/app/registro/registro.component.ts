@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
@@ -18,7 +19,7 @@ export class RegisterComponent {
   confirmPassword: string = '';
   errorMessage: string = ''; 
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private http: HttpClient) {}
 
   // Validar email
   validateEmail(email: string): boolean {
@@ -52,21 +53,22 @@ export class RegisterComponent {
       return;
     }
   
-    try {
-      await this.authService.register(this.email, this.password);
-      alert("✅ Registro exitoso");
-  
-      // 🧹 Limpiar los campos después del registro exitoso
-      this.name = '';
-      this.lastName = '';
-      this.email = '';
-      this.password = '';
-      this.confirmPassword = '';
-      this.errorMessage = '';  // Resetear mensaje de error
-    } catch (error: any) {
-      console.error("Error en el registro:", error);
-      this.errorMessage = "⚠️ Error en el registro: " + error.message;
-    }
+     try {
+    // llamada completa con nombre y apellido
+    await this.authService.register(this.email, this.password, this.name, this.lastName);
+    alert("✅ Registro exitoso");
+
+    // Limpiar campos
+    this.name = '';
+    this.lastName = '';
+    this.email = '';
+    this.password = '';
+    this.confirmPassword = '';
+    this.errorMessage = '';
+  } catch (error: any) {
+    console.error("Error en el registro:", error);
+    this.errorMessage = "⚠️ Error en el registro: " + error.message;
+  }
   }
   
 }  

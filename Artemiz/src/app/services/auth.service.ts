@@ -15,15 +15,32 @@ export class AuthService {
   private apiUrl = 'http://localhost:3000/api/usuarios';
 
   // Registro con email y contraseña
-  async register(email: string, password: string) {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
-      return userCredential.user;
-    } catch (error) {
-      console.error("Error en el registro:", error);
-      throw error;
-    }
+  async register(email: string, password: string, name: string, lastName: string) {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
+    const user = userCredential.user;
+
+    //Luego de crear el usuario en Firebase registramos en MongoDB
+    const payload = {
+      firebaseUID: user.uid,
+      nombre: name,
+      apellido: lastName
+    };
+
+    await this.http.post('http://localhost:3000/api/usuarios', payload).toPromise();
+
+    return user;
+  } catch (error) {
+    console.error("Error en el registro:", error);
+    throw error;
   }
+}
+  //Crear usuario en MongoDB
+createUserInMongo(firebaseUID: string, nombre: string, apellido: string, imgPerf?: string) {
+  const body = { firebaseUID, nombre, apellido, imgPerf };
+  return this.http.post(this.apiUrl, body);
+}
+
 
   // Inicio de sesión
   async login(email: string, password: string) {
