@@ -147,4 +147,12 @@ nav ul li a {
     margin-top: 10px;
     text-align: center;
   }
+
+.logo-img {
+  width: 90px;
+  height: auto;
+  display: block;
+  margin: 20px auto;
+  border-radius: 50%;
+}
   
