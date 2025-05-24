@@ -119,6 +119,11 @@ getUserDataFromBackend(): Observable<any> {
     });
   });
 }
+// Actualizar datos del usuario en backend
+updateUserData(firebaseUID: string, nombre: string, apellido: string, imgPerf?: string) {
+  const body = { nombre, apellido, imgPerf };
+  return this.http.put(`${this.apiUrl}/${firebaseUID}`, body);
+}
 
 }
 

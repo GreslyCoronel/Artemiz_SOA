@@ -3,20 +3,32 @@ import { AuthService } from '../services/auth.service';
 import { User } from 'firebase/auth';
 import { HttpClient } from '@angular/common/http';          // Para HttpClient
 import { switchMap } from 'rxjs/operators';                  // Para switchMap
-import { of } from 'rxjs';         
+import { of } from 'rxjs';       
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
+ 
 
 @Component({
   selector: 'app-tu-perfil',
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './tu-perfil.component.html',
   styleUrls: ['./tu-perfil.component.css']
 })
 export class TuPerfilComponent implements OnInit {
   isloggedIn: boolean = false;
   userData: any = null;
+  modoEdicion: boolean = false;
+   mensaje = '';        // Mensaje para mostrar alertas
+  mensajeTipo = '';
+
+  
 
   private apiUrl = 'http://localhost:3000/api/usuarios';
 
-  constructor(private authService: AuthService, private http: HttpClient) {}
+  constructor(private authService: AuthService, private http: HttpClient, private router: Router) {}
 
   ngOnInit() {
     this.authService.isLoggedIn().pipe(
@@ -43,4 +55,37 @@ export class TuPerfilComponent implements OnInit {
       this.userData = data;
     });
   }
+   editarPerfil() {
+    if (!this.userData || !this.userData.firebaseUID) {
+      this.mensaje = 'No hay datos del usuario para editar';
+      this.mensajeTipo = 'error';
+      return;
+    }
+
+    this.http.put(`${this.apiUrl}/${this.userData.firebaseUID}`, this.userData).subscribe(
+      () => {
+        this.mensaje = '✅ Cambios guardados con éxito';
+        this.mensajeTipo = 'exito';
+        this.modoEdicion = false;
+
+        //limpiar el mensaje después de 3 segundos
+        setTimeout(() => {
+          this.mensaje = '';
+          this.mensajeTipo = '';
+        }, 3000);
+      },
+      error => {
+        this.mensaje = '❌ Error al guardar cambios: ' + (error.message || 'Error desconocido');
+        this.mensajeTipo = 'error';
+
+        setTimeout(() => {
+          this.mensaje = '';
+          this.mensajeTipo = '';
+        }, 3000);
+      }
+    );
+  }
+
+ 
+
 }
