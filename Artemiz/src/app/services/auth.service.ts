@@ -20,7 +20,7 @@ export class AuthService {
     const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
     const user = userCredential.user;
 
-    // 👇 Luego de crear el usuario en Firebase, registramos en MongoDB
+    //Luego de crear el usuario en Firebase registramos en MongoDB
     const payload = {
       firebaseUID: user.uid,
       nombre: name,

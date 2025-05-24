@@ -54,7 +54,7 @@ export class RegisterComponent {
     }
   
      try {
-    // 👇 Aquí es donde haces la llamada completa con nombre y apellido
+    // llamada completa con nombre y apellido
     await this.authService.register(this.email, this.password, this.name, this.lastName);
     alert("✅ Registro exitoso");
 
