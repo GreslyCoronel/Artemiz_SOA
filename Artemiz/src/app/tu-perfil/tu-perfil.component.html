@@ -1,27 +1,18 @@
-<header class="header">
-  <nav>
-    <div class="logo">Artemiz</div>
-    <ul>
-      <li><a routerLink="/login">Inicio</a></li>
-    </ul>
-  </nav>
-</header>
+
+  
 <body>
   
 
 <div class="container">
   <section class="principal-info">
     <img class="img-usuario" [src]="userData?.imgPerf" alt="imagen de usuario">
+    
     <div class="perfil-cont">
       <label><h5>{{userData?.nickName}}</h5></label>
       <label class="letra-pequeña-azul">{{userData?.email}}</label>
     </div>
-    <button type="button" class="editar-button" (click)="modoEdicion = !modoEdicion">
-        {{ modoEdicion ? 'Cancelar' : 'Editar perfil' }}
-      </button>
-      <button *ngIf="modoEdicion" type="button" class="guardar-button" (click)="editarPerfil()">Guardar cambios</button>
-       <button type="button" class="eliminar-button" (click)="eliminarPerfil()">Eliminar perfil</button>
-
+     <a href=""><button type="button" class="editar-button" >Editar perfil</button></a>
+     <a href=""><button type="button" class="eliminar-button">Eliminar perfil</button></a>
   </section>
 
   <label class="h3"><h3>Datos personales</h3></label>
@@ -31,12 +22,7 @@
         <i class="fa-solid fa-user" style="padding-top: 5px;"></i>
         <div class="info-container">
           <label for="" class="legend">Nombre</label>
-           <ng-container *ngIf="!modoEdicion; else inputNombre">
-            <label>{{userData?.nombre ?? 'No registrado'}}</label>
-          </ng-container>
-          <ng-template #inputNombre>
-            <input type="text" [(ngModel)]="userData.nombre">
-          </ng-template>
+          <label>{{userData?.nombre ?? "No registrado"}} </label>
         </div>
       </div>
     </div>
@@ -45,48 +31,30 @@
       <i class="fa-solid fa-user" style="padding-top: 5px;"></i>
       <div class="info-container">
         <label for="" class="legend">Apellido</label>
-       <ng-container *ngIf="!modoEdicion; else inputApellido">
-            <label>{{userData?.apellido ?? 'No registrado'}}</label>
-          </ng-container>
-          <ng-template #inputApellido>
-            <input type="text" [(ngModel)]="userData.apellido">
-          </ng-template>
+       <label>{{userData?.apellido ?? "No registrado"}} </label>
       </div>               
     </div>
     <div class="campo">
       <i class="fa-solid fa-user" style="padding-top: 5px;"></i>
       <div class="info-container">
         <label for="" class="legend">Direccion</label>
-        <ng-container *ngIf="!modoEdicion; else inputDireccion">
-            <label>{{userData?.direccion ?? 'No registrado'}}</label>
-          </ng-container>
-          <ng-template #inputDireccion>
-            <input type="text" [(ngModel)]="userData.direccion">
-          </ng-template>
+       <label>{{userData?.direccion ?? "No registrado"}} </label>
       </div>               
     </div>
     <div class="campo">
       <i class="fa-solid fa-user" style="padding-top: 5px;"></i>
       <div class="info-container">
         <label for="" class="legend">Telefono</label>
-       <ng-container *ngIf="!modoEdicion; else inputTelefono">
-            <label>{{userData?.telefono ?? 'No registrado'}}</label>
-          </ng-container>
-          <ng-template #inputTelefono>
-            <input type="text" [(ngModel)]="userData.telefono">
-          </ng-template>
+       <label>{{userData?.telefono ?? "No registrado"}} </label>
       </div>               
     </div>
     <div class="campo">
       <i class="fa-solid fa-user" style="padding-top: 5px;"></i>
       <div class="info-container">
         <label for="" class="legend">Email</label>
-       <label>{{userData?.email ?? "No registrado"}}</label>
+       <label>{{userData?.correo ?? "No registrado"}} </label>
       </div>               
     </div>
-    <p *ngIf="mensaje" [ngClass]="{'mensaje-exito': mensajeTipo === 'exito', 'mensaje-error': mensajeTipo === 'error'}" class="mensaje">
-  {{ mensaje }}
-</p>
 
   </section>
 </div>

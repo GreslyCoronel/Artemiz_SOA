@@ -68,7 +68,7 @@ export class TuPerfilComponent implements OnInit {
         this.mensajeTipo = 'exito';
         this.modoEdicion = false;
 
-        //limpiar el mensaje después de 3 segundos
+        //limpia el mensaje después de 3 segundos
         setTimeout(() => {
           this.mensaje = '';
           this.mensajeTipo = '';
@@ -100,8 +100,7 @@ eliminarPerfil() {
       .subscribe({
         next: () => {
           alert('Perfil eliminado correctamente');
-          // Aquí también podrías cerrar sesión si quieres
-          this.authService.logout();  // si tienes método logout
+          this.authService.logout(); 
           this.router.navigate(['/login']);  // redirigir al login
         },
         error: (err) => {
