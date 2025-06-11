@@ -1,1 +1,25 @@
-<p>filtrar works!</p>
+<div class="filtros">
+  <input [(ngModel)]="busquedaTexto" placeholder="Buscar por nombre o email" />
+  <input type="date" [(ngModel)]="fechaSeleccionada" />
+  <button (click)="filtrar()">Filtrar</button>
+  <button (click)="reset()">Limpiar</button>
+</div>
+
+<table class="tabla-usuarios">
+  <thead>
+    <tr>
+      <th (click)="ordenarPor('nombre')">Nombre ⬍</th>
+      <th (click)="ordenarPor('email')">Email ⬍</th>
+      <th (click)="ordenarPor('fechaIngreso')">Fecha de ingreso ⬍</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let u of usuariosFiltrados">
+      <td>{{ u.nombre }}</td>
+      <td>{{ u.email }}</td>
+      <td>{{ u.fechaIngreso | date }}</td>
+    </tr>
+  </tbody>
+</table>
+
+

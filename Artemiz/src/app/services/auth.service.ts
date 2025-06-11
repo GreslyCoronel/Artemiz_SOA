@@ -5,6 +5,8 @@ import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { onAuthStateChanged } from 'firebase/auth';
 import { User } from 'firebase/auth';
+import { fetchSignInMethodsForEmail } from '@angular/fire/auth';
+
 
 @Injectable({
   providedIn: 'root'
@@ -14,13 +16,25 @@ export class AuthService {
   private http = inject(HttpClient);
   private apiUrl = 'http://localhost:3000/api/usuarios';
 
+  async isEmailRegistered(email: string): Promise<boolean> {
+    const methods = await fetchSignInMethodsForEmail(this.auth, email);
+    return methods.length > 0;
+  }
+
   // Registro con email y contraseña
   async register(email: string, password: string, name: string, lastName: string) {
-  try {
+   try {
+    // Verifica si el correo ya está registrado en Firebase
+    const signInMethods = await fetchSignInMethodsForEmail(this.auth, email);
+    if (signInMethods.length > 0) {
+      throw new Error('El correo ya está registrado. Intenta iniciar sesión.');
+    }
+
+    // Si no está registrado, crea el usuario
     const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
     const user = userCredential.user;
 
-    //Luego de crear el usuario en Firebase registramos en MongoDB
+    // Registrar también en MongoDB
     const payload = {
       firebaseUID: user.uid,
       nombre: name,

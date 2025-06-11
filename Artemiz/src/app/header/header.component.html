@@ -3,6 +3,7 @@
         <div class="logo">Artemiz</div>
         <ul>
             <li><a href="/login">Inicio</a></li>
+            <li *ngIf="isLoggedIn"><a routerLink="/tuPerfil">Perfil</a></li>
             <li *ngIf="isLoggedIn"><a routerLink="/filtrar">Filtrar</a></li>
             <li *ngIf="isLoggedIn"><a (click)="logout()">Cerrar sesión</a></li>
         </ul>
