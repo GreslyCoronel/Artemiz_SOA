@@ -6,6 +6,7 @@ import { CambiarPasswordComponent } from './cambiar-password/cambiar-password.co
 import { HomeComponent } from './home/home.component';
 import { HeaderComponent } from './header/header.component';
 import { FiltrarComponent } from './filtrar/filtrar.component';
+import { authGuard } from './auth.guard';
 
 
 export const routes: Routes = [
@@ -44,6 +45,7 @@ export const routes: Routes = [
     {
         path:'filtrar',
         title:'filtrar',
-        component: FiltrarComponent
+        component: FiltrarComponent,
+        canActivate: [authGuard]
     }
 ];

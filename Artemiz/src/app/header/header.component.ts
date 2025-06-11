@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; // <-- importar esto
+import { CommonModule } from '@angular/common'; 
 import { AuthService } from '../services/auth.service';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-header',
   imports: [RouterModule,CommonModule],
@@ -9,13 +9,23 @@ import { RouterModule } from '@angular/router';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent implements  OnInit {
+  
    isLoggedIn = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
-    this.authService.isLoggedIn().subscribe(user => {
-      this.isLoggedIn = !!user; // true si hay sesión, false si no
+    this.authService.isLoggedIn().subscribe(isLogged => {
+      this.isLoggedIn = isLogged;
+      console.log('¿Está logueado?', isLogged);
+    });
+  }
+
+   logout() {
+    this.authService.logout().then(() => {
+      this.router.navigate(['/login']); 
+    }).catch(err => {
+      console.error('Error al cerrar sesión:', err);
     });
   }
 }

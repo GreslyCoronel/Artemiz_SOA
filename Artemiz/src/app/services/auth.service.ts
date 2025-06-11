@@ -126,5 +126,3 @@ updateUserData(firebaseUID: string, nombre: string, apellido: string, imgPerf?: 
 }
 
 }
-
- 

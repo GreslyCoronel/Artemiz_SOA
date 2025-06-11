@@ -7,41 +7,6 @@ body {
   justify-content: center;
   padding-top: 40px;
 }
-/* Estilos del encabezado */
-header {
-    background: linear-gradient(90deg, #b511cb, #7ea7ee); /* Gradiente lineal */
-    padding: 15px;
-    margin-bottom: 30px;
-    color: white;
-    text-align: center;
-
-}
-
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-}
-
-nav ul {
-    list-style: none;
-    padding: 0;
-    display: flex;
-}
-
-nav ul li {
-    margin: 0 10px;
-}
-
-nav ul li a {
-    color: white;
-    text-decoration: none;
-}
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-}
 
 .container {
   background-color: #fff;
@@ -245,4 +210,3 @@ input[type="text"]:focus {
 .eliminar-button:hover {
   background-color: #c0392b;
 }
-
