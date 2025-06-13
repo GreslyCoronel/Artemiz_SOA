@@ -8,6 +8,8 @@ import { importProvidersFrom } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; 
 import { provideHttpClient } from '@angular/common/http';
 import { routes } from './app/app.routes';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -16,5 +18,6 @@ bootstrapApplication(AppComponent, {
     provideAuth(() => getAuth()), // Autenticación con Firebase
     importProvidersFrom(FormsModule, ReactiveFormsModule), 
     provideHttpClient(),
+    provideFirestore(() => getFirestore()),
   ],
 }).catch((err) => console.error(err));

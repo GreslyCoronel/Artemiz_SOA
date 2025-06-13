@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { onAuthStateChanged } from 'firebase/auth';
 import { User } from 'firebase/auth';
+import { UsuariosAuthService } from './usuarios-auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,8 @@ export class AuthService {
   private auth = inject(Auth);
   private http = inject(HttpClient);
   private apiUrl = 'http://localhost:3000/api/usuarios';
+  private usuariosAuthService = inject(UsuariosAuthService);
+
 
 
   // Registro con email y contraseña
@@ -35,6 +38,8 @@ export class AuthService {
 
     console.log('Payload que se enviará:', payload);
     await this.http.post('http://localhost:3000/api/usuarios', payload).toPromise();
+    await this.usuariosAuthService.guardarUsuarioEnFirestore(payload);
+
 
     return user;
   } catch (error) {
@@ -84,6 +89,7 @@ createUserInMongo(firebaseUID: string, nombre: string, apellido: string, imgPerf
     try {
       // Intentar registrar usuario en MongoDB
       await this.http.post('http://localhost:3000/api/usuarios', payload).toPromise();
+      await this.usuariosAuthService.guardarUsuarioEnFirestore(payload);
     } catch (error: any) {
       if (error.status === 409) {
         console.warn("⚠️ Usuario ya registrado en MongoDB.");
