@@ -19,12 +19,12 @@ export class FiltrarComponent {
 
   constructor(private usuarioService: UsuariosService) {}
 
-  ngOnInit() {
-    this.usuarioService.getUsuarios().subscribe(data => {
-      this.usuarios = data;
-      this.usuariosFiltrados = [...data];
-    });
-  }
+  //ngOnInit() {
+    //this.usuarioService.getUsuarios().subscribe(data => {
+      //this.usuarios = data;
+      //this.usuariosFiltrados = [...data];
+    //});
+ // }
 
   filtrar() {
     this.usuariosFiltrados = this.usuarios.filter(u => {
