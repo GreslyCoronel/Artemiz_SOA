@@ -55,6 +55,7 @@ export class RegisterComponent {
   
      try {
     // llamada completa con nombre y apellido
+    console.log('Valores enviados al servicio:', this.email, this.password, this.name, this.lastName);
     await this.authService.register(this.email, this.password, this.name, this.lastName);
     alert("✅ Registro exitoso");
 

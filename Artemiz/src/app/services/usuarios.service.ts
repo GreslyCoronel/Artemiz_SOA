@@ -10,7 +10,11 @@ export class UsuariosService {
 
   constructor(private http: HttpClient) {}
 
-  obtenerUsuarioPorId(id: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${id}`);
+  getUsuarioPorFirebaseUID(firebaseUID: string): Observable<any> {
+    return this.http.get(`http://localhost:3000/api/usuarios/${firebaseUID}`);
+  }
+
+  registrarUsuario(usuario: any): Observable<any> {
+    return this.http.post(`http://localhost:3000/api/usuarios`, usuario);
   }
 }

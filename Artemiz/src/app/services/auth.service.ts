@@ -14,25 +14,44 @@ export class AuthService {
   private http = inject(HttpClient);
   private apiUrl = 'http://localhost:3000/api/usuarios';
 
+  
   // Registro con email y contraseña
-  async register(email: string, password: string, name: string, lastName: string) {
+  async register(email: string, password: string, name: string, lastName: string, imgPerf?: string, proveedor?: string) {
   try {
     const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
     const user = userCredential.user;
-
-    //Luego de crear el usuario en Firebase registramos en MongoDB
+    const proveedorDetectado = user.providerData[0]?.providerId || 'correo';
+    const perfilImg = imgPerf || 'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-600nw-1706867365.jpg';
+ 
+     //Luego de crear el usuario en Firebase registramos en MongoDB
     const payload = {
       firebaseUID: user.uid,
       nombre: name,
-      apellido: lastName
+      apellido: lastName,
+      email: email,
+      imgPerf: perfilImg,
+      proveedor: proveedorDetectado
     };
-
+    console.log('Payload que se enviará:', payload);
     await this.http.post('http://localhost:3000/api/usuarios', payload).toPromise();
 
-    return user;
-  } catch (error) {
-    console.error("Error en el registro:", error);
-    throw error;
+    //return user;
+  } catch (error:any) {
+    //console.error("Error en el registro:", error);
+    //throw error;
+    console.error("❌ Error en el registro:", error);
+
+  if (error.status) {
+    console.error("📛 Código de estado:", error.status);
+    console.error("📩 Mensaje del backend:", error.error);
+  } else {
+    console.error("❓ Error inesperado:", error.message || error);
+  }
+
+  // Opcional: mostrar alerta al usuario
+  alert("Ocurrió un error al registrar el usuario. Revisa la consola para más detalles.");
+  
+  throw error; // Re-lanza el error si quieres manejarlo arriba
   }
 }
   //Crear usuario en MongoDB
@@ -51,11 +70,45 @@ createUserInMongo(firebaseUID: string, nombre: string, apellido: string, imgPerf
   }
 
   // Login con Google
-  loginWithGoogle() {
-    const provider = new GoogleAuthProvider();
-    return signInWithPopup(this.auth, provider);
+  async loginWithGoogle(): Promise<User> {
+  const provider = new GoogleAuthProvider();
+  const credential = await signInWithPopup(this.auth, provider);
+  const user = credential.user;
+
+  if (user) {
+    const displayName = user.displayName || '';
+    const nameParts = displayName.trim().split(' ');
+    const nombre = nameParts[0] || 'Nombre';
+    const apellido = nameParts.slice(1).join(' ') || 'Apellido';
+    const proveedorDetectado = user.providerData[0]?.providerId || 'google';
+    const perfilImg = user.photoURL || 'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-600nw-1706867365.jpg';
+
+    const payload = {
+      firebaseUID: user.uid,
+      nombre,
+      apellido,
+      email: user.email || '',
+      imgPerf: perfilImg,
+      proveedor: proveedorDetectado
+    };
+
+    console.log('📤 Enviando usuario a MongoDB:', payload);
+
+    try {
+      // Intentar registrar usuario en MongoDB
+      await this.http.post('http://localhost:3000/api/usuarios', payload).toPromise();
+    } catch (error: any) {
+      if (error.status === 409) {
+        console.warn("⚠️ Usuario ya registrado en MongoDB.");
+      } else {
+        console.error("❌ Error al registrar en MongoDB:", error);
+        throw error;
+      }
+    }
   }
 
+  return user;
+}
   // Login con GitHub
   loginWithGitHub() {
     const provider = new GithubAuthProvider();

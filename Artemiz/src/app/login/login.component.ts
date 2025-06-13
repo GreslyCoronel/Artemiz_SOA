@@ -6,6 +6,7 @@ import { GitComponent } from '../git/git.component';
 import { FacebookComponent } from '../facebook/facebook.component';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
+import { UsuariosService } from '../services/usuarios.service';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,7 @@ export class LoginComponent {
   password: string = '';
   errorMessage: string = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private usuariosService: UsuariosService) {}
 
   async login() {
     this.errorMessage = '';
@@ -46,19 +47,15 @@ export class LoginComponent {
     }
   }
 
-  loginWithGoogle() {
-    this.authService.loginWithGoogle()
-      .then(user => {
-        console.log("Inicio de sesión con Google exitoso:", user);
-        this.errorMessage = "";
-        alert("Inicio de sesión con Google exitoso!");
-        this.router.navigate(['/tuPerfil']);
-      })
-      .catch(error => {
-        console.error("Error en Google login:", error);
-        this.errorMessage = `⚠️ Error al iniciar sesión con Google: ${error.message}`;
-      });
-  }
+loginWithGoogle() {
+  this.authService.loginWithGoogle()
+  .then((user) => {
+    this.router.navigate(['/tuPerfil']);
+  })
+  .catch((error) => {
+    console.error("❌ Error al iniciar sesión con Google:", error);
+  });
+}
 
   loginWithGitHub() {
     this.authService.loginWithGitHub()
