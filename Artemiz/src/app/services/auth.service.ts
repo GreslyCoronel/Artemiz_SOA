@@ -5,8 +5,7 @@ import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { onAuthStateChanged } from 'firebase/auth';
 import { User } from 'firebase/auth';
-import { fetchSignInMethodsForEmail } from '@angular/fire/auth';
-
+import { UsuariosAuthService } from './usuarios-auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,33 +14,35 @@ export class AuthService {
   private auth = inject(Auth);
   private http = inject(HttpClient);
   private apiUrl = 'http://localhost:3000/api/usuarios';
+  private usuariosAuthService = inject(UsuariosAuthService);
 
-  async isEmailRegistered(email: string): Promise<boolean> {
-    const methods = await fetchSignInMethodsForEmail(this.auth, email);
-    return methods.length > 0;
-  }
+
 
   // Registro con email y contraseña
-  async register(email: string, password: string, name: string, lastName: string) {
+  async register(email: string, password: string, name: string, lastName: string, imgPerf?: string, proveedor?: string) {
+    console.log(password);
    try {
-    // Verifica si el correo ya está registrado en Firebase
-    const signInMethods = await fetchSignInMethodsForEmail(this.auth, email);
-    if (signInMethods.length > 0) {
-      throw new Error('El correo ya está registrado. Intenta iniciar sesión.');
-    }
-
-    // Si no está registrado, crea el usuario
     const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
     const user = userCredential.user;
-
-    // Registrar también en MongoDB
+    // //Aca se crea el usuario en Firebase y se registra en MongoDB
+    //const proveedorDetectado = 'google';
+    const proveedorDetectado = proveedor || 'manual';
+    const perfilImg = imgPerf || 'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-600nw-1706867365.jpg';
+    
     const payload = {
       firebaseUID: user.uid,
       nombre: name,
-      apellido: lastName
+      apellido: lastName,
+      email: email,
+      password:password,
+      imgPerf: perfilImg,
+      proveedor: proveedorDetectado
     };
 
+    console.log('Payload que se enviará:', payload);
     await this.http.post('http://localhost:3000/api/usuarios', payload).toPromise();
+    await this.usuariosAuthService.guardarUsuarioEnFirestore(payload);
+
 
     return user;
   } catch (error) {
@@ -55,8 +56,7 @@ createUserInMongo(firebaseUID: string, nombre: string, apellido: string, imgPerf
   return this.http.post(this.apiUrl, body);
 }
 
-
-  // Inicio de sesión
+ // Inicio de sesión
   async login(email: string, password: string) {
     if (!email || !password) {
       throw new Error("Correo y contraseña son obligatorios");
@@ -64,11 +64,51 @@ createUserInMongo(firebaseUID: string, nombre: string, apellido: string, imgPerf
     return signInWithEmailAndPassword(this.auth, email, password);
   }
 
-  // Login con Google
-  loginWithGoogle() {
-    const provider = new GoogleAuthProvider();
-    return signInWithPopup(this.auth, provider);
+  loginManual(email: string, password: string) {
+    return this.http.post('http://localhost:3000/api/usuarios/login', { email, password });
   }
+
+  // Inicio de sesión
+  async loginWithGoogle(): Promise<User> {
+  const provider = new GoogleAuthProvider();
+  const credential = await signInWithPopup(this.auth, provider);
+  const user = credential.user;
+
+  if (user) {
+    const displayName = user.displayName || '';
+    const nameParts = displayName.trim().split(' ');
+    const nombre = nameParts[0] || 'Nombre';
+    const apellido = nameParts.slice(1).join(' ') || 'Apellido';
+    const proveedorDetectado = user.providerData[0]?.providerId || 'google';
+    const perfilImg = user.photoURL || 'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-600nw-1706867365.jpg';
+
+    const payload = {
+      firebaseUID: user.uid,
+      nombre,
+      apellido,
+      email: user.email || '',
+      imgPerf: perfilImg,
+      proveedor: proveedorDetectado
+    };
+
+    console.log('📤 Enviando usuario a MongoDB:', payload);
+
+    try {
+      // Intentar registrar usuario en MongoDB
+      await this.http.post('http://localhost:3000/api/usuarios', payload).toPromise();
+      await this.usuariosAuthService.guardarUsuarioEnFirestore(payload);
+    } catch (error: any) {
+      if (error.status === 409) {
+        console.warn("⚠️ Usuario ya registrado en MongoDB.");
+      } else {
+        console.error("❌ Error al registrar en MongoDB:", error);
+        throw error;
+      }
+    }
+  }
+
+  return user;
+}
 
   // Login con GitHub
   loginWithGitHub() {

@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -55,10 +56,11 @@ export class RegisterComponent {
   
     try {
       // llamada completa con nombre y apellido
+      console.log('Valores enviados al servicio:', this.email, this.password, this.name, this.lastName);
       await this.authService.register(this.email, this.password, this.name, this.lastName);
       alert("✅ Registro exitoso");
 
-      this.router.navigate(['/tu-perfil']);
+      this.router.navigate(['/tuPerfil']);
 
       // Limpiar campos
       this.name = '';
