@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-register',
@@ -19,7 +21,7 @@ export class RegisterComponent {
   confirmPassword: string = '';
   errorMessage: string = ''; 
 
-  constructor(private authService: AuthService, private http: HttpClient) {}
+  constructor(private authService: AuthService, private http: HttpClient, private router:Router) {}
 
   // Validar email
   validateEmail(email: string): boolean {
@@ -28,11 +30,10 @@ export class RegisterComponent {
   }
 
   async register() {
-    this.errorMessage = ''; // Resetear mensaje de error
+    this.errorMessage = ''; 
   
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*_.,;:]).{8,}$/;
   
-    // Validaciones
     if (!this.email || !this.password || !this.confirmPassword) {
       this.errorMessage = "⚠️ Todos los campos son obligatorios";
       return;
@@ -53,22 +54,31 @@ export class RegisterComponent {
       return;
     }
   
-     try {
-    // llamada completa con nombre y apellido
-    await this.authService.register(this.email, this.password, this.name, this.lastName);
-    alert("✅ Registro exitoso");
+    try {
+      // llamada completa con nombre y apellido
+      console.log('Valores enviados al servicio:', this.email, this.password, this.name, this.lastName);
+      await this.authService.register(this.email, this.password, this.name, this.lastName);
+      alert("✅ Registro exitoso");
 
-    // Limpiar campos
-    this.name = '';
-    this.lastName = '';
-    this.email = '';
-    this.password = '';
-    this.confirmPassword = '';
-    this.errorMessage = '';
-  } catch (error: any) {
-    console.error("Error en el registro:", error);
-    this.errorMessage = "⚠️ Error en el registro: " + error.message;
+      this.router.navigate(['/tuPerfil']);
+
+      // Limpiar campos
+      this.name = '';
+      this.lastName = '';
+      this.email = '';
+      this.password = '';
+      this.confirmPassword = '';
+      this.errorMessage = '';
+    } catch (error: any) {
+      console.error("Error en el registro:", error);
+      if (error.message.includes('correo ya está registrado')) {
+        this.errorMessage = "⚠️ Este correo ya existe. Intenta iniciar sesión.";
+      } else if (error.code === 'auth/email-already-in-use') {
+        this.errorMessage = "⚠️ El correo ya está en uso por otra cuenta.";
+      } else {
+        this.errorMessage = "⚠️ Error en el registro: " + error.message;
+      }
+    }
   }
-  }
-  
+ 
 }  

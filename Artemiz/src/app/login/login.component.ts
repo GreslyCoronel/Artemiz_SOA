@@ -6,6 +6,8 @@ import { GitComponent } from '../git/git.component';
 import { FacebookComponent } from '../facebook/facebook.component';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
+import { UsuariosService } from '../services/usuarios.service';
+import { UsuariosAuthService } from '../services/usuarios-auth.service';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +21,7 @@ export class LoginComponent {
   password: string = '';
   errorMessage: string = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private usuariosService: UsuariosService,  private usuariosAuthService: UsuariosAuthService) {}
 
   async login() {
     this.errorMessage = '';
@@ -36,29 +38,43 @@ export class LoginComponent {
     }
 
     try {
-      const user = await this.authService.login(this.email, this.password);
-      console.log("Usuario autenticado:", user);
-      alert("Inicio de sesión exitoso!");
-      this.router.navigate(['/tuPerfil']);
+      const userCredential = await this.authService.login(this.email, this.password);
+      const user = userCredential.user;
+
+      this.authService.getUserDataFromBackend().subscribe(async userData => {
+      if (userData) {
+        await this.usuariosAuthService.guardarUsuarioEnFirestore({
+          firebaseUID: user.uid,
+          nombre: userData.nombre || '',
+          apellido: userData.apellido || '',
+          email: user.email,
+          proveedor: 'password',
+          imgPerf: userData.imgPerf || ''
+        });
+
+        alert("Inicio de sesión exitoso!");
+        this.router.navigate(['/tuPerfil']);
+
+      } else {
+        console.warn("⚠️ No se encontraron datos del usuario en el backend.");
+      }
+    });
+      
     } catch (error: any) {
       console.error("Error en el login:", error);
       this.errorMessage = "⚠️ Error al iniciar sesión: " + (error.message || "Inténtalo nuevamente.");
     }
   }
 
-  loginWithGoogle() {
-    this.authService.loginWithGoogle()
-      .then(user => {
-        console.log("Inicio de sesión con Google exitoso:", user);
-        this.errorMessage = "";
-        alert("Inicio de sesión con Google exitoso!");
-        this.router.navigate(['/tuPerfil']);
-      })
-      .catch(error => {
-        console.error("Error en Google login:", error);
-        this.errorMessage = `⚠️ Error al iniciar sesión con Google: ${error.message}`;
-      });
-  }
+loginWithGoogle() {
+  this.authService.loginWithGoogle()
+  .then((user) => {
+    this.router.navigate(['/tuPerfil']);
+  })
+  .catch((error) => {
+    console.error("❌ Error al iniciar sesión con Google:", error);
+  });
+}
 
   loginWithGitHub() {
     this.authService.loginWithGitHub()

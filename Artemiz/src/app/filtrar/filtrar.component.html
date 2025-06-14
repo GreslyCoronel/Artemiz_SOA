@@ -1,0 +1,31 @@
+<div class="filtros">
+  <input [(ngModel)]="busquedaTexto" placeholder="Buscar por nombre o email" />
+  <input type="date" [(ngModel)]="fechaSeleccionada" />
+  <button (click)="filtrar()">Filtrar</button>
+  <button (click)="resetFiltros()">Ver todos</button>
+</div>
+
+<table class="tabla-usuarios">
+  <thead>
+    <tr>
+      <th (click)="ordenarPor('nombre')">Nombre ⬍</th>
+      <th (click)="ordenarPor('correo')">Email ⬍</th>
+      <th>Fecha(s) de ingreso ⬍</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let usuario of usuariosFiltrados">
+      <td>{{ usuario.nombre }} {{usuario.apellido}}</td>
+      <td>{{ usuario.correo }}</td>
+      <td>
+        <ul>
+          <li *ngFor="let resgistro of usuario.registros">
+            {{resgistro.fechaIngreso.toDate() | date: 'dd/MM/yyyy, hh:mm:ss a'}}
+          </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+

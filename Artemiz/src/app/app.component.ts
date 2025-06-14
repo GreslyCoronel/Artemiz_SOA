@@ -6,7 +6,8 @@ import { GitComponent } from './git/git.component';
 import { TuPerfilComponent } from './tu-perfil/tu-perfil.component';
 import { CambiarPasswordComponent } from './cambiar-password/cambiar-password.component';
 import { HomeComponent } from './home/home.component';
-
+import { HeaderComponent } from './header/header.component';
+import { FiltrarComponent } from './filtrar/filtrar.component';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,9 @@ import { HomeComponent } from './home/home.component';
      GitComponent,
      TuPerfilComponent,
      CambiarPasswordComponent,
-     HomeComponent
+     HomeComponent,
+     HeaderComponent,
+     FiltrarComponent
     ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
