@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UsuariosService } from '../services/usuarios.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { UsuariosAuthService } from '../services/usuarios-auth.service';
 
 @Component({
   selector: 'app-filtrar',
@@ -13,45 +14,58 @@ export class FiltrarComponent {
   usuarios: any[] = [];
   usuariosFiltrados: any[] = [];
   busquedaTexto: string = '';
-  fechaSeleccionada: string = '';
-  ordenCampo: string = '';
+  fechaSeleccionada: string | null = null;
+  ordenCampo: 'nombre' | 'correo' = 'nombre';
   ordenAscendente: boolean = true;
 
-  constructor(private usuarioService: UsuariosService) {}
+  constructor(private usuarioService: UsuariosService, private usuariosAuthService : UsuariosAuthService) {}
 
-  //ngOnInit() {
-    //this.usuarioService.getUsuarios().subscribe(data => {
-      //this.usuarios = data;
-      //this.usuariosFiltrados = [...data];
-    //});
- // }
-
-  filtrar() {
-    this.usuariosFiltrados = this.usuarios.filter(u => {
-      const coincideTexto = u.nombre.toLowerCase().includes(this.busquedaTexto.toLowerCase()) ||
-                            u.email?.toLowerCase().includes(this.busquedaTexto.toLowerCase());
-
-      const coincideFecha = !this.fechaSeleccionada || 
-        new Date(u.fechaIngreso).toDateString() === new Date(this.fechaSeleccionada).toDateString();
-
-      return coincideTexto && coincideFecha;
+  ngOnInit() {
+    this.usuariosAuthService.getTodosLosUsuariosConHistorial().subscribe(data => {
+      this.usuarios = data;
+      this.usuariosFiltrados = [...data];
     });
   }
 
-  reset() {
+  ordenarPor(campo: 'nombre' | 'correo') {
+    if(this.ordenCampo === campo){
+      this.ordenAscendente = !this.ordenAscendente;
+    }else{
+      this.ordenCampo = campo;
+      this.ordenAscendente = true;
+    }
+  }
+
+ filtrar() {
+  const texto = (this.busquedaTexto || '').trim().toLowerCase();
+  const fechaSeleccionada = this.fechaSeleccionada;
+
+  this.usuariosFiltrados = this.usuarios.filter(usuario => {
+    const nombreCompleto = `${usuario.nombre || ''} ${usuario.apellido || ''}`.toLowerCase();
+    const correo = (usuario.correo || '').toLowerCase();
+
+    const coincideTexto =
+      texto === '' || nombreCompleto.includes(texto) || correo.includes(texto);
+
+    const coincideFecha =
+      !fechaSeleccionada ||
+      (usuario.registros || []).some((r: any) => {
+        const fechaIngreso = new Date(r.fechaIngreso.toDate());
+        const fechaFormateada = fechaIngreso.toISOString().split('T')[0]; // yyyy-MM-dd
+        return fechaFormateada === fechaSeleccionada;
+      });
+
+    return coincideTexto && coincideFecha;
+  });
+}
+
+
+
+  resetFiltros() {
     this.busquedaTexto = '';
     this.fechaSeleccionada = '';
     this.usuariosFiltrados = [...this.usuarios];
   }
 
-  ordenarPor(campo: string) {
-    this.ordenAscendente = this.ordenCampo === campo ? !this.ordenAscendente : true;
-    this.ordenCampo = campo;
-
-    this.usuariosFiltrados.sort((a, b) => {
-      const aVal = a[campo];
-      const bVal = b[campo];
-      return this.ordenAscendente ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-    });
-  }
+ 
 }

@@ -7,6 +7,7 @@ import { FacebookComponent } from '../facebook/facebook.component';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { UsuariosService } from '../services/usuarios.service';
+import { UsuariosAuthService } from '../services/usuarios-auth.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,7 @@ export class LoginComponent {
   password: string = '';
   errorMessage: string = '';
 
-  constructor(private authService: AuthService, private router: Router, private usuariosService: UsuariosService) {}
+  constructor(private authService: AuthService, private router: Router, private usuariosService: UsuariosService,  private usuariosAuthService: UsuariosAuthService) {}
 
   async login() {
     this.errorMessage = '';
@@ -37,10 +38,28 @@ export class LoginComponent {
     }
 
     try {
-      const user = await this.authService.login(this.email, this.password);
-      console.log("Usuario autenticado:", user);
-      alert("Inicio de sesión exitoso!");
-      this.router.navigate(['/tuPerfil']);
+      const userCredential = await this.authService.login(this.email, this.password);
+      const user = userCredential.user;
+
+      this.authService.getUserDataFromBackend().subscribe(async userData => {
+      if (userData) {
+        await this.usuariosAuthService.guardarUsuarioEnFirestore({
+          firebaseUID: user.uid,
+          nombre: userData.nombre || '',
+          apellido: userData.apellido || '',
+          email: user.email,
+          proveedor: 'password',
+          imgPerf: userData.imgPerf || ''
+        });
+
+        alert("Inicio de sesión exitoso!");
+        this.router.navigate(['/tuPerfil']);
+
+      } else {
+        console.warn("⚠️ No se encontraron datos del usuario en el backend.");
+      }
+    });
+      
     } catch (error: any) {
       console.error("Error en el login:", error);
       this.errorMessage = "⚠️ Error al iniciar sesión: " + (error.message || "Inténtalo nuevamente.");

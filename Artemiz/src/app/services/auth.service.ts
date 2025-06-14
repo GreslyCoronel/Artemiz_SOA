@@ -20,11 +20,13 @@ export class AuthService {
 
   // Registro con email y contraseña
   async register(email: string, password: string, name: string, lastName: string, imgPerf?: string, proveedor?: string) {
+    console.log(password);
    try {
     const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
     const user = userCredential.user;
     // //Aca se crea el usuario en Firebase y se registra en MongoDB
-    const proveedorDetectado = user.providerData[0]?.providerId || 'correo';
+    //const proveedorDetectado = 'google';
+    const proveedorDetectado = proveedor || 'manual';
     const perfilImg = imgPerf || 'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-600nw-1706867365.jpg';
     
     const payload = {
@@ -32,6 +34,7 @@ export class AuthService {
       nombre: name,
       apellido: lastName,
       email: email,
+      password:password,
       imgPerf: perfilImg,
       proveedor: proveedorDetectado
     };
@@ -59,6 +62,10 @@ createUserInMongo(firebaseUID: string, nombre: string, apellido: string, imgPerf
       throw new Error("Correo y contraseña son obligatorios");
     }
     return signInWithEmailAndPassword(this.auth, email, password);
+  }
+
+  loginManual(email: string, password: string) {
+    return this.http.post('http://localhost:3000/api/usuarios/login', { email, password });
   }
 
   // Inicio de sesión

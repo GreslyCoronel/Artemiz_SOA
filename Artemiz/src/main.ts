@@ -19,5 +19,7 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(FormsModule, ReactiveFormsModule), 
     provideHttpClient(),
     provideFirestore(() => getFirestore()),
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore())
   ],
 }).catch((err) => console.error(err));

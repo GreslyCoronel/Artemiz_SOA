@@ -16,5 +16,7 @@ export class UsuariosService {
   registrarUsuario(usuario: any): Observable<any> {
     return this.http.post(`http://localhost:3000/api/usuarios`, usuario);
   }
+
+ 
 }
 
